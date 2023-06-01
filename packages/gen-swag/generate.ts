@@ -123,7 +123,12 @@ function replaceUrlParams(url: string, parameters: Parameter[]) {
 }
 
 function getFunctionParameters(parameters: Parameter[]) {
-  return parameters
+  const requiredParams = parameters.filter((param) => param.required);
+  const optionalParams = parameters.filter((param) => !param.required);
+
+  const sortedParams = [...requiredParams, ...optionalParams];
+
+  return sortedParams
     .map(
       (param) => `${param.name}${param.required ? "" : "?"}: ${getType(param)}`,
     )
