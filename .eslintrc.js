@@ -17,6 +17,7 @@ const config = {
       rootDir: ["apps/nextjs"],
     },
   },
+  ignorePatterns: ["node_modules/", "dist/", "__generated__"], // add ignore patterns here
 };
 
 module.exports = config;
