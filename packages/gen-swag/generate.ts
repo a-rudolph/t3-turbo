@@ -64,13 +64,17 @@ interface Definition {
 
 interface SwaggerConfig {
   swagger: string;
+  host: string;
+  basePath: string;
   paths: EndPoints;
   definitions: {
     [definitionName: string]: Definition;
   };
 }
 
-function createApiClient(baseUrl: string, config: SwaggerConfig) {
+function createApiClient(config: SwaggerConfig) {
+  const baseUrl = `${config.host}${config.basePath}`;
+
   const endpoints = config.paths;
   const apiClient: { [endPointName: string]: string } = {};
 
@@ -91,13 +95,17 @@ export async function ${functionName}(${getFunctionParameters(
     headers: ${JSON.stringify(headers)},
   }
   ${getRequestBody(endpoint.parameters)}
-  const response = await fetch('${url}', options)
+  const response = await fetch(\`${replaceUrlParams(
+    url,
+    endpoint.parameters,
+  )}\`, options)
   const json = await response.json()
 
   if (json.code !== 200) {
     throw new Error(json.message)
   }
-  return json.data as ${getResponseType(endpoint)}
+
+  return json as ApiResponse<${getResponseType(endpoint)}>
 }
 `;
       apiClient[functionName] = code;
@@ -105,6 +113,13 @@ export async function ${functionName}(${getFunctionParameters(
   }
 
   return apiClient;
+}
+
+function replaceUrlParams(url: string, parameters: Parameter[]) {
+  return url.replace(/{(.*?)}/g, (_, paramName) => {
+    const param = parameters.find((param) => param.name === paramName)!;
+    return `\${${param.name}}`;
+  });
 }
 
 function getFunctionParameters(parameters: Parameter[]) {
@@ -158,7 +173,7 @@ function getResponseType(endpoint: Endpoint) {
 }
 
 // @ts-ignore
-const apiClient = createApiClient("http://localhost:3000", config);
+const apiClient = createApiClient(config);
 
 const createTypeDefinitions = (config: SwaggerConfig) => {
   const definitions = config.definitions;
@@ -170,6 +185,13 @@ const createTypeDefinitions = (config: SwaggerConfig) => {
     const required = definition.required || [];
 
     const code = `
+export interface ApiResponse<T> {
+  code: number;
+  type: string;
+  message: string;
+  data: T;
+}
+
 export interface ${definitionName}Model {
   ${Object.entries(properties)
     .map(([propertyName, property]) => {
