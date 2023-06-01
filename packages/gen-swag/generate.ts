@@ -83,7 +83,7 @@ function createApiClient(config: SwaggerConfig) {
     for (const method in methods) {
       const endpoint = methods[method]!;
       const functionName = endpoint.operationId;
-      const url = `${baseUrl}${path}`;
+      const url = `https://${baseUrl}${path}`;
       const headers = {};
 
       const code = `

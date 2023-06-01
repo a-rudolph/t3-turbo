@@ -1,8 +1,8 @@
 {
   "name": "@acme/gen-swag",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
-  "main": "index.js",
+  "main": "__generated__/api-client.ts",
   "scripts": {
     "dev": "tsc && node ./dist/generate.js"
   },

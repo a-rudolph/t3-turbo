@@ -43,6 +43,9 @@ importers:
       '@acme/db':
         specifier: ^0.1.0
         version: link:../../packages/db
+      '@acme/gen-swag':
+        specifier: ^0.1.0
+        version: link:../../packages/gen-swag
       '@acme/tailwind-config':
         specifier: ^0.1.0
         version: link:../../packages/config/tailwind
@@ -237,6 +240,12 @@ importers:
       prisma:
         specifier: ^4.13.0
         version: 4.13.0
+      typescript:
+        specifier: ^5.0.4
+        version: 5.0.4
+
+  packages/gen-swag:
+    devDependencies:
       typescript:
         specifier: ^5.0.4
         version: 5.0.4

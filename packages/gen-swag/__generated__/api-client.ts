@@ -61,7 +61,7 @@ export async function getPetById(petId: number) {
     headers: {},
   }
   
-  const response = await fetch(`petstore.swagger.io/v2/pet/${petId}`, options)
+  const response = await fetch(`https://petstore.swagger.io/v2/pet/${petId}`, options)
   const json = await response.json()
 
   if (json.code !== 200) {
@@ -77,7 +77,7 @@ export async function updatePetWithForm(petId: number, name?: string, status?: s
     headers: {},
   }
   
-  const response = await fetch(`petstore.swagger.io/v2/pet/${petId}`, options)
+  const response = await fetch(`https://petstore.swagger.io/v2/pet/${petId}`, options)
   const json = await response.json()
 
   if (json.code !== 200) {
@@ -93,7 +93,7 @@ export async function deletePet(petId: number, api_key?: string) {
     headers: {},
   }
   
-  const response = await fetch(`petstore.swagger.io/v2/pet/${petId}`, options)
+  const response = await fetch(`https://petstore.swagger.io/v2/pet/${petId}`, options)
   const json = await response.json()
 
   if (json.code !== 200) {
@@ -109,7 +109,7 @@ export async function uploadFile(petId: number, additionalMetadata?: string, fil
     headers: {},
   }
   
-  const response = await fetch(`petstore.swagger.io/v2/pet/${petId}/uploadImage`, options)
+  const response = await fetch(`https://petstore.swagger.io/v2/pet/${petId}/uploadImage`, options)
   const json = await response.json()
 
   if (json.code !== 200) {
@@ -125,7 +125,7 @@ export async function addPet(body: undefined) {
     headers: {},
   }
   options.body = JSON.stringify(body)
-  const response = await fetch(`petstore.swagger.io/v2/pet`, options)
+  const response = await fetch(`https://petstore.swagger.io/v2/pet`, options)
   const json = await response.json()
 
   if (json.code !== 200) {
@@ -141,7 +141,7 @@ export async function updatePet(body: undefined) {
     headers: {},
   }
   options.body = JSON.stringify(body)
-  const response = await fetch(`petstore.swagger.io/v2/pet`, options)
+  const response = await fetch(`https://petstore.swagger.io/v2/pet`, options)
   const json = await response.json()
 
   if (json.code !== 200) {
@@ -157,7 +157,7 @@ export async function findPetsByStatus(status: string[]) {
     headers: {},
   }
   
-  const response = await fetch(`petstore.swagger.io/v2/pet/findByStatus`, options)
+  const response = await fetch(`https://petstore.swagger.io/v2/pet/findByStatus`, options)
   const json = await response.json()
 
   if (json.code !== 200) {
@@ -173,7 +173,7 @@ export async function findPetsByTags(tags: string[]) {
     headers: {},
   }
   
-  const response = await fetch(`petstore.swagger.io/v2/pet/findByTags`, options)
+  const response = await fetch(`https://petstore.swagger.io/v2/pet/findByTags`, options)
   const json = await response.json()
 
   if (json.code !== 200) {
@@ -189,7 +189,7 @@ export async function getInventory() {
     headers: {},
   }
   
-  const response = await fetch(`petstore.swagger.io/v2/store/inventory`, options)
+  const response = await fetch(`https://petstore.swagger.io/v2/store/inventory`, options)
   const json = await response.json()
 
   if (json.code !== 200) {
@@ -205,7 +205,7 @@ export async function getOrderById(orderId: number) {
     headers: {},
   }
   
-  const response = await fetch(`petstore.swagger.io/v2/store/order/${orderId}`, options)
+  const response = await fetch(`https://petstore.swagger.io/v2/store/order/${orderId}`, options)
   const json = await response.json()
 
   if (json.code !== 200) {
@@ -221,7 +221,7 @@ export async function deleteOrder(orderId: number) {
     headers: {},
   }
   
-  const response = await fetch(`petstore.swagger.io/v2/store/order/${orderId}`, options)
+  const response = await fetch(`https://petstore.swagger.io/v2/store/order/${orderId}`, options)
   const json = await response.json()
 
   if (json.code !== 200) {
@@ -237,7 +237,7 @@ export async function placeOrder(body: undefined) {
     headers: {},
   }
   options.body = JSON.stringify(body)
-  const response = await fetch(`petstore.swagger.io/v2/store/order`, options)
+  const response = await fetch(`https://petstore.swagger.io/v2/store/order`, options)
   const json = await response.json()
 
   if (json.code !== 200) {
@@ -253,7 +253,7 @@ export async function getUserByName(username: string) {
     headers: {},
   }
   
-  const response = await fetch(`petstore.swagger.io/v2/user/${username}`, options)
+  const response = await fetch(`https://petstore.swagger.io/v2/user/${username}`, options)
   const json = await response.json()
 
   if (json.code !== 200) {
@@ -269,7 +269,7 @@ export async function updateUser(username: string, body: undefined) {
     headers: {},
   }
   options.body = JSON.stringify(body)
-  const response = await fetch(`petstore.swagger.io/v2/user/${username}`, options)
+  const response = await fetch(`https://petstore.swagger.io/v2/user/${username}`, options)
   const json = await response.json()
 
   if (json.code !== 200) {
@@ -285,7 +285,7 @@ export async function deleteUser(username: string) {
     headers: {},
   }
   
-  const response = await fetch(`petstore.swagger.io/v2/user/${username}`, options)
+  const response = await fetch(`https://petstore.swagger.io/v2/user/${username}`, options)
   const json = await response.json()
 
   if (json.code !== 200) {
@@ -301,7 +301,7 @@ export async function createUser(body: undefined) {
     headers: {},
   }
   options.body = JSON.stringify(body)
-  const response = await fetch(`petstore.swagger.io/v2/user`, options)
+  const response = await fetch(`https://petstore.swagger.io/v2/user`, options)
   const json = await response.json()
 
   if (json.code !== 200) {
@@ -317,7 +317,7 @@ export async function createUsersWithArrayInput(body: undefined) {
     headers: {},
   }
   options.body = JSON.stringify(body)
-  const response = await fetch(`petstore.swagger.io/v2/user/createWithArray`, options)
+  const response = await fetch(`https://petstore.swagger.io/v2/user/createWithArray`, options)
   const json = await response.json()
 
   if (json.code !== 200) {
@@ -333,7 +333,7 @@ export async function createUsersWithListInput(body: undefined) {
     headers: {},
   }
   options.body = JSON.stringify(body)
-  const response = await fetch(`petstore.swagger.io/v2/user/createWithList`, options)
+  const response = await fetch(`https://petstore.swagger.io/v2/user/createWithList`, options)
   const json = await response.json()
 
   if (json.code !== 200) {
@@ -349,7 +349,7 @@ export async function loginUser(username: string, password: string) {
     headers: {},
   }
   
-  const response = await fetch(`petstore.swagger.io/v2/user/login`, options)
+  const response = await fetch(`https://petstore.swagger.io/v2/user/login`, options)
   const json = await response.json()
 
   if (json.code !== 200) {
@@ -365,7 +365,7 @@ export async function logoutUser() {
     headers: {},
   }
   
-  const response = await fetch(`petstore.swagger.io/v2/user/logout`, options)
+  const response = await fetch(`https://petstore.swagger.io/v2/user/logout`, options)
   const json = await response.json()
 
   if (json.code !== 200) {
