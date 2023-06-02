@@ -101,11 +101,21 @@ export async function ${functionName}(${getFunctionParameters(
   )}\`, options)
   const json = await response.json()
 
-  if (json.code !== 200) {
-    throw new Error(json.message)
+  if (response.status !== 200) {
+    throw {
+      code: response.status,
+      type: response.statusText,
+      message: json.message || null,
+      data: json,
+    };
   }
 
-  return json as ApiResponse<${getResponseType(endpoint)}>
+  return {
+    code: response.status,
+    type: response.statusText,
+    message: json.message || null,
+    data: json,
+  } as ApiResponse<${getResponseType(endpoint)}>
 }
 `;
       apiClient[functionName] = code;
