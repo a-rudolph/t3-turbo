@@ -4,13 +4,6 @@ import path from "path";
 
 import config from "./swagger.json";
 
-interface ApiResponse<T> {
-  code: number;
-  type: string;
-  message: string;
-  data: T;
-}
-
 type DefinitionRef = { $ref: `#/definitions/${string}` };
 
 type Parameter = {
@@ -86,6 +79,8 @@ function createApiClient(config: SwaggerConfig) {
       const url = `https://${baseUrl}${path}`;
       const headers = {};
 
+      const responseType = getResponseType(endpoint);
+
       const code = `
 export async function ${functionName}(${getFunctionParameters(
         endpoint.parameters,
@@ -95,27 +90,12 @@ export async function ${functionName}(${getFunctionParameters(
     headers: ${JSON.stringify(headers)},
   }
   ${getRequestBody(endpoint.parameters)}
-  const response = await fetch(\`${replaceUrlParams(
-    url,
-    endpoint.parameters,
-  )}\`, options)
-  const json = await response.json()
-
-  if (response.status !== 200) {
-    throw {
-      code: response.status,
-      type: response.statusText,
-      message: json.message || null,
-      data: json,
-    };
-  }
-
-  return {
-    code: response.status,
-    type: response.statusText,
-    message: json.message || null,
-    data: json,
-  } as ApiResponse<${getResponseType(endpoint)}>
+  const response = await makeRequest<${responseType}>(\`${replaceUrlParams(
+        url,
+        endpoint.parameters,
+      )}\`, options)
+  
+  return response
 }
 `;
       apiClient[functionName] = code;
@@ -124,6 +104,27 @@ export async function ${functionName}(${getFunctionParameters(
 
   return apiClient;
 }
+
+const helpers = `
+async function makeRequest<T extends any>(...fetchArgs: Parameters<typeof fetch>) {
+  const response= await fetch(...fetchArgs)
+  const json = (await response.json()) as T
+
+  if (response.status !== 200) {
+    throw {
+      code: response.status,
+      type: response.statusText,
+      data: json,
+    };
+  }
+
+  return {
+    code: response.status,
+    type: response.statusText,
+    data: json,
+  } as ApiResponse<T>
+} 
+`;
 
 function replaceUrlParams(url: string, parameters: Parameter[]) {
   return url.replace(/{(.*?)}/g, (_, paramName) => {
@@ -231,11 +232,11 @@ fs.writeFileSync(
 export interface ApiResponse<T> {
   code: number;
   type: string;
-  message: string;
   data: T;
 }
 ${typeDefinitionsCode}
 
+${helpers}
 ${apiClientCode}
 `,
 );

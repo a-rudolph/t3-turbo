@@ -4,7 +4,6 @@
 export interface ApiResponse<T> {
   code: number;
   type: string;
-  message: string;
   data: T;
 }
 
@@ -55,20 +54,14 @@ export type UserType = {
 
 
 
-export async function getPetById(petId: number) {
-  const options: RequestInit = {
-    method: 'GET',
-    headers: {},
-  }
-  
-  const response = await fetch(`https://petstore.swagger.io/v2/pet/${petId}`, options)
-  const json = await response.json()
+async function makeRequest<T extends any>(...fetchArgs: Parameters<typeof fetch>) {
+  const response= await fetch(...fetchArgs)
+  const json = (await response.json()) as T
 
   if (response.status !== 200) {
     throw {
       code: response.status,
       type: response.statusText,
-      message: json.message || null,
       data: json,
     };
   }
@@ -76,9 +69,20 @@ export async function getPetById(petId: number) {
   return {
     code: response.status,
     type: response.statusText,
-    message: json.message || null,
     data: json,
-  } as ApiResponse<PetType>
+  } as ApiResponse<T>
+} 
+
+
+export async function getPetById(petId: number) {
+  const options: RequestInit = {
+    method: 'GET',
+    headers: {},
+  }
+  
+  const response = await makeRequest<PetType>(`https://petstore.swagger.io/v2/pet/${petId}`, options)
+  
+  return response
 }
 
 export async function updatePetWithForm(petId: number, name?: string, status?: string) {
@@ -87,24 +91,9 @@ export async function updatePetWithForm(petId: number, name?: string, status?: s
     headers: {},
   }
   
-  const response = await fetch(`https://petstore.swagger.io/v2/pet/${petId}`, options)
-  const json = await response.json()
-
-  if (response.status !== 200) {
-    throw {
-      code: response.status,
-      type: response.statusText,
-      message: json.message || null,
-      data: json,
-    };
-  }
-
-  return {
-    code: response.status,
-    type: response.statusText,
-    message: json.message || null,
-    data: json,
-  } as ApiResponse<void>
+  const response = await makeRequest<void>(`https://petstore.swagger.io/v2/pet/${petId}`, options)
+  
+  return response
 }
 
 export async function deletePet(petId: number, api_key?: string) {
@@ -113,24 +102,9 @@ export async function deletePet(petId: number, api_key?: string) {
     headers: {},
   }
   
-  const response = await fetch(`https://petstore.swagger.io/v2/pet/${petId}`, options)
-  const json = await response.json()
-
-  if (response.status !== 200) {
-    throw {
-      code: response.status,
-      type: response.statusText,
-      message: json.message || null,
-      data: json,
-    };
-  }
-
-  return {
-    code: response.status,
-    type: response.statusText,
-    message: json.message || null,
-    data: json,
-  } as ApiResponse<void>
+  const response = await makeRequest<void>(`https://petstore.swagger.io/v2/pet/${petId}`, options)
+  
+  return response
 }
 
 export async function uploadFile(petId: number, additionalMetadata?: string, file?: File) {
@@ -139,24 +113,9 @@ export async function uploadFile(petId: number, additionalMetadata?: string, fil
     headers: {},
   }
   
-  const response = await fetch(`https://petstore.swagger.io/v2/pet/${petId}/uploadImage`, options)
-  const json = await response.json()
-
-  if (response.status !== 200) {
-    throw {
-      code: response.status,
-      type: response.statusText,
-      message: json.message || null,
-      data: json,
-    };
-  }
-
-  return {
-    code: response.status,
-    type: response.statusText,
-    message: json.message || null,
-    data: json,
-  } as ApiResponse<ApiResponseType>
+  const response = await makeRequest<ApiResponseType>(`https://petstore.swagger.io/v2/pet/${petId}/uploadImage`, options)
+  
+  return response
 }
 
 export async function addPet(body: undefined) {
@@ -165,24 +124,9 @@ export async function addPet(body: undefined) {
     headers: {},
   }
   options.body = JSON.stringify(body)
-  const response = await fetch(`https://petstore.swagger.io/v2/pet`, options)
-  const json = await response.json()
-
-  if (response.status !== 200) {
-    throw {
-      code: response.status,
-      type: response.statusText,
-      message: json.message || null,
-      data: json,
-    };
-  }
-
-  return {
-    code: response.status,
-    type: response.statusText,
-    message: json.message || null,
-    data: json,
-  } as ApiResponse<void>
+  const response = await makeRequest<void>(`https://petstore.swagger.io/v2/pet`, options)
+  
+  return response
 }
 
 export async function updatePet(body: undefined) {
@@ -191,24 +135,9 @@ export async function updatePet(body: undefined) {
     headers: {},
   }
   options.body = JSON.stringify(body)
-  const response = await fetch(`https://petstore.swagger.io/v2/pet`, options)
-  const json = await response.json()
-
-  if (response.status !== 200) {
-    throw {
-      code: response.status,
-      type: response.statusText,
-      message: json.message || null,
-      data: json,
-    };
-  }
-
-  return {
-    code: response.status,
-    type: response.statusText,
-    message: json.message || null,
-    data: json,
-  } as ApiResponse<void>
+  const response = await makeRequest<void>(`https://petstore.swagger.io/v2/pet`, options)
+  
+  return response
 }
 
 export async function findPetsByStatus(status: string[]) {
@@ -217,24 +146,9 @@ export async function findPetsByStatus(status: string[]) {
     headers: {},
   }
   
-  const response = await fetch(`https://petstore.swagger.io/v2/pet/findByStatus`, options)
-  const json = await response.json()
-
-  if (response.status !== 200) {
-    throw {
-      code: response.status,
-      type: response.statusText,
-      message: json.message || null,
-      data: json,
-    };
-  }
-
-  return {
-    code: response.status,
-    type: response.statusText,
-    message: json.message || null,
-    data: json,
-  } as ApiResponse<PetType[]>
+  const response = await makeRequest<PetType[]>(`https://petstore.swagger.io/v2/pet/findByStatus`, options)
+  
+  return response
 }
 
 export async function findPetsByTags(tags: string[]) {
@@ -243,24 +157,9 @@ export async function findPetsByTags(tags: string[]) {
     headers: {},
   }
   
-  const response = await fetch(`https://petstore.swagger.io/v2/pet/findByTags`, options)
-  const json = await response.json()
-
-  if (response.status !== 200) {
-    throw {
-      code: response.status,
-      type: response.statusText,
-      message: json.message || null,
-      data: json,
-    };
-  }
-
-  return {
-    code: response.status,
-    type: response.statusText,
-    message: json.message || null,
-    data: json,
-  } as ApiResponse<PetType[]>
+  const response = await makeRequest<PetType[]>(`https://petstore.swagger.io/v2/pet/findByTags`, options)
+  
+  return response
 }
 
 export async function getInventory() {
@@ -269,24 +168,9 @@ export async function getInventory() {
     headers: {},
   }
   
-  const response = await fetch(`https://petstore.swagger.io/v2/store/inventory`, options)
-  const json = await response.json()
-
-  if (response.status !== 200) {
-    throw {
-      code: response.status,
-      type: response.statusText,
-      message: json.message || null,
-      data: json,
-    };
-  }
-
-  return {
-    code: response.status,
-    type: response.statusText,
-    message: json.message || null,
-    data: json,
-  } as ApiResponse<object>
+  const response = await makeRequest<object>(`https://petstore.swagger.io/v2/store/inventory`, options)
+  
+  return response
 }
 
 export async function getOrderById(orderId: number) {
@@ -295,24 +179,9 @@ export async function getOrderById(orderId: number) {
     headers: {},
   }
   
-  const response = await fetch(`https://petstore.swagger.io/v2/store/order/${orderId}`, options)
-  const json = await response.json()
-
-  if (response.status !== 200) {
-    throw {
-      code: response.status,
-      type: response.statusText,
-      message: json.message || null,
-      data: json,
-    };
-  }
-
-  return {
-    code: response.status,
-    type: response.statusText,
-    message: json.message || null,
-    data: json,
-  } as ApiResponse<OrderType>
+  const response = await makeRequest<OrderType>(`https://petstore.swagger.io/v2/store/order/${orderId}`, options)
+  
+  return response
 }
 
 export async function deleteOrder(orderId: number) {
@@ -321,24 +190,9 @@ export async function deleteOrder(orderId: number) {
     headers: {},
   }
   
-  const response = await fetch(`https://petstore.swagger.io/v2/store/order/${orderId}`, options)
-  const json = await response.json()
-
-  if (response.status !== 200) {
-    throw {
-      code: response.status,
-      type: response.statusText,
-      message: json.message || null,
-      data: json,
-    };
-  }
-
-  return {
-    code: response.status,
-    type: response.statusText,
-    message: json.message || null,
-    data: json,
-  } as ApiResponse<void>
+  const response = await makeRequest<void>(`https://petstore.swagger.io/v2/store/order/${orderId}`, options)
+  
+  return response
 }
 
 export async function placeOrder(body: undefined) {
@@ -347,24 +201,9 @@ export async function placeOrder(body: undefined) {
     headers: {},
   }
   options.body = JSON.stringify(body)
-  const response = await fetch(`https://petstore.swagger.io/v2/store/order`, options)
-  const json = await response.json()
-
-  if (response.status !== 200) {
-    throw {
-      code: response.status,
-      type: response.statusText,
-      message: json.message || null,
-      data: json,
-    };
-  }
-
-  return {
-    code: response.status,
-    type: response.statusText,
-    message: json.message || null,
-    data: json,
-  } as ApiResponse<OrderType>
+  const response = await makeRequest<OrderType>(`https://petstore.swagger.io/v2/store/order`, options)
+  
+  return response
 }
 
 export async function getUserByName(username: string) {
@@ -373,24 +212,9 @@ export async function getUserByName(username: string) {
     headers: {},
   }
   
-  const response = await fetch(`https://petstore.swagger.io/v2/user/${username}`, options)
-  const json = await response.json()
-
-  if (response.status !== 200) {
-    throw {
-      code: response.status,
-      type: response.statusText,
-      message: json.message || null,
-      data: json,
-    };
-  }
-
-  return {
-    code: response.status,
-    type: response.statusText,
-    message: json.message || null,
-    data: json,
-  } as ApiResponse<UserType>
+  const response = await makeRequest<UserType>(`https://petstore.swagger.io/v2/user/${username}`, options)
+  
+  return response
 }
 
 export async function updateUser(username: string, body: undefined) {
@@ -399,24 +223,9 @@ export async function updateUser(username: string, body: undefined) {
     headers: {},
   }
   options.body = JSON.stringify(body)
-  const response = await fetch(`https://petstore.swagger.io/v2/user/${username}`, options)
-  const json = await response.json()
-
-  if (response.status !== 200) {
-    throw {
-      code: response.status,
-      type: response.statusText,
-      message: json.message || null,
-      data: json,
-    };
-  }
-
-  return {
-    code: response.status,
-    type: response.statusText,
-    message: json.message || null,
-    data: json,
-  } as ApiResponse<void>
+  const response = await makeRequest<void>(`https://petstore.swagger.io/v2/user/${username}`, options)
+  
+  return response
 }
 
 export async function deleteUser(username: string) {
@@ -425,24 +234,9 @@ export async function deleteUser(username: string) {
     headers: {},
   }
   
-  const response = await fetch(`https://petstore.swagger.io/v2/user/${username}`, options)
-  const json = await response.json()
-
-  if (response.status !== 200) {
-    throw {
-      code: response.status,
-      type: response.statusText,
-      message: json.message || null,
-      data: json,
-    };
-  }
-
-  return {
-    code: response.status,
-    type: response.statusText,
-    message: json.message || null,
-    data: json,
-  } as ApiResponse<void>
+  const response = await makeRequest<void>(`https://petstore.swagger.io/v2/user/${username}`, options)
+  
+  return response
 }
 
 export async function createUser(body: undefined) {
@@ -451,24 +245,9 @@ export async function createUser(body: undefined) {
     headers: {},
   }
   options.body = JSON.stringify(body)
-  const response = await fetch(`https://petstore.swagger.io/v2/user`, options)
-  const json = await response.json()
-
-  if (response.status !== 200) {
-    throw {
-      code: response.status,
-      type: response.statusText,
-      message: json.message || null,
-      data: json,
-    };
-  }
-
-  return {
-    code: response.status,
-    type: response.statusText,
-    message: json.message || null,
-    data: json,
-  } as ApiResponse<void>
+  const response = await makeRequest<void>(`https://petstore.swagger.io/v2/user`, options)
+  
+  return response
 }
 
 export async function createUsersWithArrayInput(body: undefined) {
@@ -477,24 +256,9 @@ export async function createUsersWithArrayInput(body: undefined) {
     headers: {},
   }
   options.body = JSON.stringify(body)
-  const response = await fetch(`https://petstore.swagger.io/v2/user/createWithArray`, options)
-  const json = await response.json()
-
-  if (response.status !== 200) {
-    throw {
-      code: response.status,
-      type: response.statusText,
-      message: json.message || null,
-      data: json,
-    };
-  }
-
-  return {
-    code: response.status,
-    type: response.statusText,
-    message: json.message || null,
-    data: json,
-  } as ApiResponse<void>
+  const response = await makeRequest<void>(`https://petstore.swagger.io/v2/user/createWithArray`, options)
+  
+  return response
 }
 
 export async function createUsersWithListInput(body: undefined) {
@@ -503,24 +267,9 @@ export async function createUsersWithListInput(body: undefined) {
     headers: {},
   }
   options.body = JSON.stringify(body)
-  const response = await fetch(`https://petstore.swagger.io/v2/user/createWithList`, options)
-  const json = await response.json()
-
-  if (response.status !== 200) {
-    throw {
-      code: response.status,
-      type: response.statusText,
-      message: json.message || null,
-      data: json,
-    };
-  }
-
-  return {
-    code: response.status,
-    type: response.statusText,
-    message: json.message || null,
-    data: json,
-  } as ApiResponse<void>
+  const response = await makeRequest<void>(`https://petstore.swagger.io/v2/user/createWithList`, options)
+  
+  return response
 }
 
 export async function loginUser(username: string, password: string) {
@@ -529,24 +278,9 @@ export async function loginUser(username: string, password: string) {
     headers: {},
   }
   
-  const response = await fetch(`https://petstore.swagger.io/v2/user/login`, options)
-  const json = await response.json()
-
-  if (response.status !== 200) {
-    throw {
-      code: response.status,
-      type: response.statusText,
-      message: json.message || null,
-      data: json,
-    };
-  }
-
-  return {
-    code: response.status,
-    type: response.statusText,
-    message: json.message || null,
-    data: json,
-  } as ApiResponse<string>
+  const response = await makeRequest<string>(`https://petstore.swagger.io/v2/user/login`, options)
+  
+  return response
 }
 
 export async function logoutUser() {
@@ -555,23 +289,8 @@ export async function logoutUser() {
     headers: {},
   }
   
-  const response = await fetch(`https://petstore.swagger.io/v2/user/logout`, options)
-  const json = await response.json()
-
-  if (response.status !== 200) {
-    throw {
-      code: response.status,
-      type: response.statusText,
-      message: json.message || null,
-      data: json,
-    };
-  }
-
-  return {
-    code: response.status,
-    type: response.statusText,
-    message: json.message || null,
-    data: json,
-  } as ApiResponse<void>
+  const response = await makeRequest<void>(`https://petstore.swagger.io/v2/user/logout`, options)
+  
+  return response
 }
 
