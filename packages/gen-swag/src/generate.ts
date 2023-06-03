@@ -61,7 +61,7 @@ async function makeRequest<T extends any>(...fetchArgs: Parameters<typeof fetch>
     type: response.statusText,
     data: json,
   } as ApiResponse<T>
-} 
+}
 `;
 
 function replaceUrlParams(url: string, parameters: Parameter[]) {
@@ -165,7 +165,13 @@ export type ${definitionName}Type = {
 // @ts-ignore
 const typeDefinitions = createTypeDefinitions(config);
 
-const filePath = path.join(__dirname, "..", "__generated__", "api-client.ts");
+const filePath = path.join(
+  __dirname,
+  "..",
+  "..",
+  "__generated__",
+  "api-client.ts",
+);
 
 const apiClientCode = apiClient.join("");
 const typeDefinitionsCode = typeDefinitions.join("");

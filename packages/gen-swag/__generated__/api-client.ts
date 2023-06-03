@@ -71,7 +71,7 @@ async function makeRequest<T extends any>(...fetchArgs: Parameters<typeof fetch>
     type: response.statusText,
     data: json,
   } as ApiResponse<T>
-} 
+}
 
 
 export async function getPetById(petId: number) {

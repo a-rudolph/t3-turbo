@@ -4,8 +4,9 @@
   "description": "",
   "main": "__generated__/api-client.ts",
   "scripts": {
-    "dev": "tsc -w & nodemon ./dist/generate.js",
-    "api:generate": "tsc && node ./dist/generate.js"
+    "dev": "tsc -w --preserveWatchOutput & nodemon ./dist/src/generate.js",
+    "api:generate": "tsc && node ./dist/src/generate.js",
+    "clean": "rm -rf ./dist"
   },
   "keywords": [],
   "author": "",
