@@ -1,4 +1,5 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
@@ -7,5 +8,5 @@
     "resolveJsonModule": true,
     "esModuleInterop": true
   },
-  "include": ["./generate.ts"]
+  "include": ["src/**/*.ts"]
 }
