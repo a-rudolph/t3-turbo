@@ -5,8 +5,8 @@
   "main": "__generated__/api-client.ts",
   "scripts": {
     "dev": "node ./watch.js",
-    "prebuild": "tsc",
-    "build": "node ./dist/src/generate.js",
+    "build": "tsc && node ./dist/src/generate.js",
+    "postinstall": "pnpm run build",
     "clean": "rm -rf ./dist"
   },
   "keywords": [],
