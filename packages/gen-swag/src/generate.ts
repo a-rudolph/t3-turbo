@@ -2,6 +2,13 @@ import fs from "fs";
 import path from "path";
 
 import config from "../swagger.json";
+import type {
+  DefinitionRef,
+  Endpoint,
+  Parameter,
+  Property,
+  SwaggerConfig,
+} from "./types";
 
 function createApiClient(config: SwaggerConfig) {
   const baseUrl = `${config.host}${config.basePath}`;

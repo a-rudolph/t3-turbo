@@ -1,6 +1,6 @@
-type DefinitionRef = { $ref: `#/definitions/${string}` };
+export type DefinitionRef = { $ref: `#/definitions/${string}` };
 
-type Parameter = {
+export type Parameter = {
   name: string;
   in: string;
   description?: string;
@@ -10,7 +10,7 @@ type Parameter = {
   items?: Parameter;
 };
 
-interface Endpoint {
+export interface Endpoint {
   tags: string[];
   summary: string;
   description: string;
@@ -28,20 +28,20 @@ interface Endpoint {
   }[];
 }
 
-interface EndPoints {
+export interface EndPoints {
   [path: string]: {
     [method: string]: Endpoint;
   };
 }
 
-interface Property {
+export interface Property {
   type: string;
   format?: string;
   items?: Property | DefinitionRef;
   enum?: string[];
 }
 
-interface Definition {
+export interface Definition {
   type: string;
   properties: {
     [propertyName: string]: Property | DefinitionRef;
@@ -49,7 +49,7 @@ interface Definition {
   required?: string[];
 }
 
-interface SwaggerConfig {
+export interface SwaggerConfig {
   swagger: string;
   host: string;
   basePath: string;

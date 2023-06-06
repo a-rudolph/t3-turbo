@@ -10,17 +10,12 @@
       "inputs": ["prisma/schema.prisma"],
       "cache": false
     },
-    "@acme/gen-swag#api:generate": {
-      "inputs": ["dist/generate.js"],
-      "outputs": ["__generated__/**"],
-      "cache": false
-    },
     "dev": {
       "persistent": true,
       "cache": false
     },
     "build": {
-      "dependsOn": ["^build", "^db:generate", "@acme/gen-swag#api:generate"],
+      "dependsOn": ["^build", "^db:generate"],
       "outputs": [".next/**", ".expo/**"]
     },
     "lint": {},
