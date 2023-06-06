@@ -5,7 +5,7 @@ interface Props {
 }
 
 function PetsPage({ numPets = 10 }: Props) {
-  const petIds = new Array<number>(numPets).fill(null);
+  const petIds = new Array<number>(numPets).fill(1);
 
   return (
     <div className="container mx-auto px-4 py-8">
