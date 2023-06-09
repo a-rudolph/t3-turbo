@@ -18,7 +18,7 @@ export type PetType = {
   name: string
   photoUrls: string[]
   tags?: TagType[]
-  status?: string
+  status?: ("available" | "pending" | "sold")
 }
 
 export type TagType = {
@@ -37,7 +37,7 @@ export type OrderType = {
   petId?: number
   quantity?: number
   shipDate?: string
-  status?: string
+  status?: ("placed" | "approved" | "delivered")
   complete?: boolean
 }
 
@@ -80,8 +80,11 @@ export async function getPetById(petId: number) {
     headers: {},
   }
   
-  const response = await makeRequest<PetType>(`https://petstore.swagger.io/v2/pet/${petId}`, options)
-  
+  const response = await makeRequest<PetType>(
+    `https://petstore.swagger.io/v2/pet/${petId}`,
+    options
+  )
+   
   return response
 }
 
@@ -91,8 +94,11 @@ export async function updatePetWithForm(petId: number, name?: string, status?: s
     headers: {},
   }
   
-  const response = await makeRequest<void>(`https://petstore.swagger.io/v2/pet/${petId}`, options)
-  
+  const response = await makeRequest<void>(
+    `https://petstore.swagger.io/v2/pet/${petId}`,
+    options
+  )
+   
   return response
 }
 
@@ -102,8 +108,11 @@ export async function deletePet(petId: number, api_key?: string) {
     headers: {},
   }
   
-  const response = await makeRequest<void>(`https://petstore.swagger.io/v2/pet/${petId}`, options)
-  
+  const response = await makeRequest<void>(
+    `https://petstore.swagger.io/v2/pet/${petId}`,
+    options
+  )
+   
   return response
 }
 
@@ -113,41 +122,67 @@ export async function uploadFile(petId: number, additionalMetadata?: string, fil
     headers: {},
   }
   
-  const response = await makeRequest<ApiResponseType>(`https://petstore.swagger.io/v2/pet/${petId}/uploadImage`, options)
-  
+  const response = await makeRequest<ApiResponseType>(
+    `https://petstore.swagger.io/v2/pet/${petId}/uploadImage`,
+    options
+  )
+   
   return response
 }
 
-export async function addPet(body: undefined) {
+export async function addPet(body: PetType) {
   const options: RequestInit = {
     method: 'POST',
     headers: {},
   }
   options.body = JSON.stringify(body)
-  const response = await makeRequest<void>(`https://petstore.swagger.io/v2/pet`, options)
   
+  const response = await makeRequest<void>(
+    `https://petstore.swagger.io/v2/pet`,
+    options
+  )
+   
   return response
 }
 
-export async function updatePet(body: undefined) {
+export async function updatePet(body: PetType) {
   const options: RequestInit = {
     method: 'PUT',
     headers: {},
   }
   options.body = JSON.stringify(body)
-  const response = await makeRequest<void>(`https://petstore.swagger.io/v2/pet`, options)
   
+  const response = await makeRequest<void>(
+    `https://petstore.swagger.io/v2/pet`,
+    options
+  )
+   
   return response
 }
 
-export async function findPetsByStatus(status: string[]) {
+export async function findPetsByStatus(status: ("available" | "pending" | "sold")[]) {
   const options: RequestInit = {
     method: 'GET',
     headers: {},
   }
   
-  const response = await makeRequest<PetType[]>(`https://petstore.swagger.io/v2/pet/findByStatus`, options)
+  const params: string[] = []
+
   
+  if (status) {
+    status.forEach((value) => {
+      params.push(`status=${value}`);
+    });
+  }
+
+
+  const searchParams = '?'.concat(params.join('&'))
+  
+  const response = await makeRequest<PetType[]>(
+    `https://petstore.swagger.io/v2/pet/findByStatus`+ searchParams,
+    options
+  )
+   
   return response
 }
 
@@ -157,8 +192,23 @@ export async function findPetsByTags(tags: string[]) {
     headers: {},
   }
   
-  const response = await makeRequest<PetType[]>(`https://petstore.swagger.io/v2/pet/findByTags`, options)
+  const params: string[] = []
+
   
+  if (tags) {
+    tags.forEach((value) => {
+      params.push(`tags=${value}`);
+    });
+  }
+
+
+  const searchParams = '?'.concat(params.join('&'))
+  
+  const response = await makeRequest<PetType[]>(
+    `https://petstore.swagger.io/v2/pet/findByTags`+ searchParams,
+    options
+  )
+   
   return response
 }
 
@@ -168,8 +218,11 @@ export async function getInventory() {
     headers: {},
   }
   
-  const response = await makeRequest<object>(`https://petstore.swagger.io/v2/store/inventory`, options)
-  
+  const response = await makeRequest<object>(
+    `https://petstore.swagger.io/v2/store/inventory`,
+    options
+  )
+   
   return response
 }
 
@@ -179,8 +232,11 @@ export async function getOrderById(orderId: number) {
     headers: {},
   }
   
-  const response = await makeRequest<OrderType>(`https://petstore.swagger.io/v2/store/order/${orderId}`, options)
-  
+  const response = await makeRequest<OrderType>(
+    `https://petstore.swagger.io/v2/store/order/${orderId}`,
+    options
+  )
+   
   return response
 }
 
@@ -190,19 +246,26 @@ export async function deleteOrder(orderId: number) {
     headers: {},
   }
   
-  const response = await makeRequest<void>(`https://petstore.swagger.io/v2/store/order/${orderId}`, options)
-  
+  const response = await makeRequest<void>(
+    `https://petstore.swagger.io/v2/store/order/${orderId}`,
+    options
+  )
+   
   return response
 }
 
-export async function placeOrder(body: undefined) {
+export async function placeOrder(body: OrderType) {
   const options: RequestInit = {
     method: 'POST',
     headers: {},
   }
   options.body = JSON.stringify(body)
-  const response = await makeRequest<OrderType>(`https://petstore.swagger.io/v2/store/order`, options)
   
+  const response = await makeRequest<OrderType>(
+    `https://petstore.swagger.io/v2/store/order`,
+    options
+  )
+   
   return response
 }
 
@@ -212,19 +275,26 @@ export async function getUserByName(username: string) {
     headers: {},
   }
   
-  const response = await makeRequest<UserType>(`https://petstore.swagger.io/v2/user/${username}`, options)
-  
+  const response = await makeRequest<UserType>(
+    `https://petstore.swagger.io/v2/user/${username}`,
+    options
+  )
+   
   return response
 }
 
-export async function updateUser(username: string, body: undefined) {
+export async function updateUser(username: string, body: UserType) {
   const options: RequestInit = {
     method: 'PUT',
     headers: {},
   }
   options.body = JSON.stringify(body)
-  const response = await makeRequest<void>(`https://petstore.swagger.io/v2/user/${username}`, options)
   
+  const response = await makeRequest<void>(
+    `https://petstore.swagger.io/v2/user/${username}`,
+    options
+  )
+   
   return response
 }
 
@@ -234,41 +304,56 @@ export async function deleteUser(username: string) {
     headers: {},
   }
   
-  const response = await makeRequest<void>(`https://petstore.swagger.io/v2/user/${username}`, options)
-  
+  const response = await makeRequest<void>(
+    `https://petstore.swagger.io/v2/user/${username}`,
+    options
+  )
+   
   return response
 }
 
-export async function createUser(body: undefined) {
+export async function createUser(body: UserType) {
   const options: RequestInit = {
     method: 'POST',
     headers: {},
   }
   options.body = JSON.stringify(body)
-  const response = await makeRequest<void>(`https://petstore.swagger.io/v2/user`, options)
   
+  const response = await makeRequest<void>(
+    `https://petstore.swagger.io/v2/user`,
+    options
+  )
+   
   return response
 }
 
-export async function createUsersWithArrayInput(body: undefined) {
+export async function createUsersWithArrayInput(body: UserType[]) {
   const options: RequestInit = {
     method: 'POST',
     headers: {},
   }
   options.body = JSON.stringify(body)
-  const response = await makeRequest<void>(`https://petstore.swagger.io/v2/user/createWithArray`, options)
   
+  const response = await makeRequest<void>(
+    `https://petstore.swagger.io/v2/user/createWithArray`,
+    options
+  )
+   
   return response
 }
 
-export async function createUsersWithListInput(body: undefined) {
+export async function createUsersWithListInput(body: UserType[]) {
   const options: RequestInit = {
     method: 'POST',
     headers: {},
   }
   options.body = JSON.stringify(body)
-  const response = await makeRequest<void>(`https://petstore.swagger.io/v2/user/createWithList`, options)
   
+  const response = await makeRequest<void>(
+    `https://petstore.swagger.io/v2/user/createWithList`,
+    options
+  )
+   
   return response
 }
 
@@ -278,8 +363,25 @@ export async function loginUser(username: string, password: string) {
     headers: {},
   }
   
-  const response = await makeRequest<string>(`https://petstore.swagger.io/v2/user/login`, options)
+  const params: string[] = []
+
   
+  if (username) {
+      params.push(`username=${username}`);
+  }
+
+  if (password) {
+      params.push(`password=${password}`);
+  }
+
+
+  const searchParams = '?'.concat(params.join('&'))
+  
+  const response = await makeRequest<string>(
+    `https://petstore.swagger.io/v2/user/login`+ searchParams,
+    options
+  )
+   
   return response
 }
 
@@ -289,8 +391,11 @@ export async function logoutUser() {
     headers: {},
   }
   
-  const response = await makeRequest<void>(`https://petstore.swagger.io/v2/user/logout`, options)
-  
+  const response = await makeRequest<void>(
+    `https://petstore.swagger.io/v2/user/logout`,
+    options
+  )
+   
   return response
 }
 

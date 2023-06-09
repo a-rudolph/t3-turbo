@@ -22,6 +22,10 @@ function createApiClient(config: SwaggerConfig) {
       const endpoint = methods[method]!;
       const functionName = endpoint.operationId;
       const url = `https://${baseUrl}${path}`;
+
+      const searchParams = getSearchParams(endpoint.parameters);
+
+      // TODO: headers
       const headers = {};
 
       const responseType = getResponseType(endpoint);
@@ -34,12 +38,14 @@ export async function ${functionName}(${getFunctionParameters(
     method: '${method.toUpperCase()}',
     headers: ${JSON.stringify(headers)},
   }
-  ${getRequestBody(endpoint.parameters)}
-  const response = await makeRequest<${responseType}>(\`${replaceUrlParams(
-        url,
-        endpoint.parameters,
-      )}\`, options)
-  
+  ${searchParams}${getRequestBody(endpoint.parameters)}
+  const response = await makeRequest<${responseType}>(
+    \`${replaceUrlParams(url, endpoint.parameters)}\`${
+        searchParams ? "+ searchParams" : ""
+      },
+    options
+  )
+   
   return response
 }
 `;
@@ -77,6 +83,40 @@ function replaceUrlParams(url: string, parameters: Parameter[]) {
     return `\${${param.name}}`;
   });
 }
+function getSearchParams(parameters: Parameter[]) {
+  const searchParams = parameters.filter((param) => param.in === "query");
+  if (!searchParams.length) {
+    return "";
+  }
+
+  let code = ``;
+
+  for (const param of searchParams) {
+    if (param.type === "array") {
+      code += `
+  if (${param.name}) {
+    ${param.name}.forEach((value) => {
+      params.push(\`${param.name}=\${value}\`);
+    });
+  }
+`;
+    } else {
+      code += `
+  if (${param.name}) {
+      params.push(\`${param.name}=\${${param.name}}\`);
+  }
+`;
+    }
+  }
+
+  return `
+  const params: string[] = []
+
+  ${code}
+
+  const searchParams = '?'.concat(params.join('&'))
+  `;
+}
 
 function getFunctionParameters(parameters: Parameter[]) {
   const requiredParams = parameters.filter((param) => param.required);
@@ -91,9 +131,16 @@ function getFunctionParameters(parameters: Parameter[]) {
     .join(", ");
 }
 
+const getTypeFromRef = (ref: DefinitionRef) =>
+  ref.$ref.split("/").pop()!.concat("Type");
+
 function getType(param: Parameter | Property | DefinitionRef): string {
   if ("$ref" in param) {
-    return param.$ref.split("/").pop()!.concat("Type");
+    return getTypeFromRef(param);
+  }
+
+  if ("schema" in param && param.schema) {
+    return getType(param.schema);
   }
 
   if (param.type === "array") {
@@ -108,6 +155,10 @@ function getType(param: Parameter | Property | DefinitionRef): string {
     return "File";
   }
 
+  if ("enum" in param && param.enum) {
+    return `(${param.enum.map((value) => JSON.stringify(value)).join(" | ")})`;
+  }
+
   return param.type!;
 }
 
@@ -116,7 +167,8 @@ function getRequestBody(parameters: Parameter[]) {
   if (!body) {
     return "";
   }
-  return `options.body = JSON.stringify(${body.name})`;
+  return `options.body = JSON.stringify(${body.name})
+  `;
 }
 
 function getResponseType(endpoint: Endpoint) {

@@ -4,7 +4,7 @@ import type {
   NextPage,
 } from "next/types";
 
-import { getPetById } from "@acme/gen-swag";
+import { findPetsByStatus, getPetById } from "@acme/gen-swag";
 
 export const getServerSideProps = async (
   ctx: GetServerSidePropsContext<{ petId: string }>,
@@ -36,15 +36,27 @@ export const getServerSideProps = async (
 const PetsPage: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ pets, error }) => {
+  const test = async () => {
+    const response = await findPetsByStatus(["pending", "available"]);
+    console.log(response);
+  };
+
   if (!pets && typeof error === "object" && error !== null) {
     return (
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-lg">Error</h1>
         {Object.entries(error).map(([key, value]) => (
-          <p key={key}>
+          <p key={key} className="text-red-500">
             {key}: {String(value)}
           </p>
         ))}
+
+        <button
+          className="mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
+          onClick={test}
+        >
+          test
+        </button>
       </div>
     );
   }
@@ -53,6 +65,12 @@ const PetsPage: NextPage<
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-lg">Pets</h1>
       <p>{pets?.data?.name}</p>
+      <button
+        className="mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
+        onClick={test}
+      >
+        test
+      </button>
     </div>
   );
 };

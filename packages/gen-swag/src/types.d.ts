@@ -8,6 +8,7 @@ export type Parameter = {
   type?: string;
   format?: string;
   items?: Parameter;
+  schema?: Parameter | DefinitionRef;
 };
 
 export interface Endpoint {
