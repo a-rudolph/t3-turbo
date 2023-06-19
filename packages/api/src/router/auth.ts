@@ -51,7 +51,7 @@ export const authRouter = createTRPCRouter({
         });
       }
     }),
-  logout: publicProcedure.mutation(async ({ ctx }) => {
+  logout: publicProcedure.mutation(({ ctx }) => {
     ctx.session.destroy();
     return { isLoggedIn: false, login: "", avatarUrl: "" };
   }),
