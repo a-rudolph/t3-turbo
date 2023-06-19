@@ -146,12 +146,12 @@ const AuthShowcase: React.FC = () => {
 
   const signIn = api.auth.login.useMutation({
     onSuccess() {
-      client.auth.user.invalidate();
+      void client.auth.user.invalidate();
     },
   });
   const signOut = api.auth.logout.useMutation({
     onSuccess() {
-      client.auth.user.invalidate();
+      void client.auth.user.invalidate();
     },
   });
 
