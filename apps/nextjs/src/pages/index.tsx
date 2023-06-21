@@ -134,24 +134,24 @@ const Home: NextPage = () => {
 export default Home;
 
 const AuthShowcase: React.FC = () => {
-  const { data: session } = api.auth.user.useQuery();
+  const { data: session } = api.auth.getSession.useQuery();
   const client = api.useContext();
 
-  const user = session?.login;
+  const user = session?.user?.login;
 
   const { data: secretMessage } = api.auth.getSecretMessage.useQuery(
     undefined, // no input
-    { enabled: !!user },
+    { enabled: !!session },
   );
 
   const signIn = api.auth.login.useMutation({
     onSuccess() {
-      void client.auth.user.invalidate();
+      void client.auth.getSession.invalidate();
     },
   });
   const signOut = api.auth.logout.useMutation({
     onSuccess() {
-      void client.auth.user.invalidate();
+      void client.auth.getSession.invalidate();
     },
   });
 

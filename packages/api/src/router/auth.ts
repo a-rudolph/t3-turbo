@@ -5,7 +5,10 @@ import { type User } from "../lib/session";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const authRouter = createTRPCRouter({
-  user: publicProcedure.query(({ ctx }) => {
+  getSession: publicProcedure.query(({ ctx }) => {
+    return ctx.session;
+  }),
+  getUser: protectedProcedure.query(({ ctx }) => {
     if (ctx.session.user) {
       return {
         ...ctx.session.user,
