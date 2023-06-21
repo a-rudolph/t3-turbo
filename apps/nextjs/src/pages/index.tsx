@@ -1,7 +1,6 @@
 import { useState } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { signIn, signOut } from "next-auth/react";
 
 import { api, type RouterOutputs } from "~/utils/api";
 
@@ -135,26 +134,44 @@ const Home: NextPage = () => {
 export default Home;
 
 const AuthShowcase: React.FC = () => {
-  const { data: session } = api.auth.getSession.useQuery();
+  const { data: session } = api.auth.user.useQuery();
+  const client = api.useContext();
+
+  const user = session?.login;
 
   const { data: secretMessage } = api.auth.getSecretMessage.useQuery(
     undefined, // no input
-    { enabled: !!session?.user },
+    { enabled: !!user },
   );
+
+  const signIn = api.auth.login.useMutation({
+    onSuccess() {
+      void client.auth.user.invalidate();
+    },
+  });
+  const signOut = api.auth.logout.useMutation({
+    onSuccess() {
+      void client.auth.user.invalidate();
+    },
+  });
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
-      {session?.user && (
+      {user && (
         <p className="text-center text-2xl text-white">
-          {session && <span>Logged in as {session?.user?.name}</span>}
+          <span>Logged in as {user}</span>
           {secretMessage && <span> - {secretMessage}</span>}
         </p>
       )}
       <button
         className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-        onClick={session ? () => void signOut() : () => void signIn()}
+        onClick={
+          user
+            ? () => void signOut.mutate()
+            : () => void signIn.mutate({ username: "username" })
+        }
       >
-        {session ? "Sign out" : "Sign in"}
+        {user ? "Sign out" : "Sign in"}
       </button>
     </div>
   );

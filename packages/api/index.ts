@@ -3,7 +3,9 @@ import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
 import { type AppRouter } from "./src/root";
 
 export { appRouter, type AppRouter } from "./src/root";
-export { createTRPCContext } from "./src/trpc";
+export { createContext } from "./src/context";
+
+export { type User, withSessionSsr } from "./src/lib/session";
 
 /**
  * Inference helpers for input types
