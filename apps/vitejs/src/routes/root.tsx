@@ -1,11 +1,8 @@
-import {
-  Link,
-  Outlet,
-  useLoaderData,
-  type LoaderFunction,
-} from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
 import { findPetsByStatus } from "@acme/gen-swag";
+
+import { useTypedLoader } from "../lib/useTypedLoader";
 
 export async function loader() {
   const response = await findPetsByStatus(["available"]);
@@ -17,7 +14,7 @@ export async function loader() {
 }
 
 export default function Root() {
-  const { pets } = useDataFromLoader<typeof loader>();
+  const { pets } = useTypedLoader<typeof loader>();
 
   return (
     <>
@@ -63,8 +60,4 @@ export default function Root() {
       </div>
     </>
   );
-}
-
-export function useDataFromLoader<TLoader extends LoaderFunction>() {
-  return useLoaderData() as Awaited<ReturnType<TLoader>>;
 }

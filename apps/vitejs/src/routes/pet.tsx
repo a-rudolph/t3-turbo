@@ -1,42 +1,36 @@
-import { Form } from "react-router-dom";
+import { Form, type LoaderFunctionArgs } from "react-router-dom";
+
+import { getPetById } from "@acme/gen-swag";
+
+import { useTypedLoader } from "../lib/useTypedLoader";
+
+export const loader = async ({ params }: LoaderFunctionArgs) => {
+  const response = await getPetById(Number(params.petId));
+
+  if (!response.data) {
+    throw new Error("Failed to load contact");
+  }
+
+  return { pet: response.data };
+};
 
 export default function Pet() {
-  const contact = {
-    first: "Your",
-    last: "Name",
-    avatar: "https://placekitten.com/g/200/200",
-    twitter: "your_handle",
-    notes: "Some notes",
-    favorite: true,
-  };
+  const { pet } = useTypedLoader<typeof loader>();
 
   return (
     <div id="contact">
       <div>
-        <img key={contact.avatar} src={contact.avatar || undefined} />
+        <img key={pet.photoUrls[0]} src={pet.photoUrls[0] || undefined} />
       </div>
 
       <div>
         <h1>
-          {contact.first || contact.last ? (
-            <>
-              {contact.first} {contact.last}
-            </>
-          ) : (
-            <i>No Name</i>
-          )}{" "}
-          <Favorite contact={contact} />
+          {pet.name ? <>{pet.name} </> : <i>No Name</i>}{" "}
+          <Favorite contact={{ favorite: true }} />
         </h1>
 
-        {contact.twitter && (
-          <p>
-            <a target="_blank" href={`https://twitter.com/${contact.twitter}`}>
-              {contact.twitter}
-            </a>
-          </p>
-        )}
-
-        {contact.notes && <p>{contact.notes}</p>}
+        {pet.category && <p>{pet.category.name}</p>}
+        {pet.status && <p>{pet.status}</p>}
 
         <div>
           <Form action="edit">
