@@ -7,6 +7,16 @@ export type ApiResponse<T> = {
   data: T;
 }
 
+export type ApiError = {
+  code: number;
+  type: string;
+  data: {
+    code: number;
+    message: string;
+    type: 'error'
+  }
+}
+
 export type CategoryType = {
   id?: number
   name?: string
@@ -62,7 +72,7 @@ async function makeRequest<T extends any>(...fetchArgs: Parameters<typeof fetch>
     throw {
       code: response.status,
       type: response.statusText,
-      data: json,
+      data: json as ApiError,
     };
   }
 
