@@ -163,7 +163,24 @@ function getType(param: Parameter | Property | DefinitionRef): string {
 }
 
 function getRequestBody(parameters: Parameter[]) {
+  const formData = parameters.filter((param) => param.in === "formData");
+
+  if (formData.length) {
+    return `
+  options.headers = {
+    ...options.headers,
+    'Content-Type': 'application/x-www-form-urlencoded',
+  }
+  const body = new URLSearchParams({
+    ${formData.map((param) => `${param.name}: ${param.name},`).join("\n    ")}
+  }).toString()
+  
+  options.body = body
+    `;
+  }
+
   const body = parameters.find((param) => param.in === "body");
+
   if (!body) {
     return "";
   }

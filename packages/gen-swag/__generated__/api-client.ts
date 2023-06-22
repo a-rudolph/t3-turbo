@@ -104,6 +104,17 @@ export async function updatePetWithForm(petId: number, name?: string, status?: s
     headers: {},
   }
   
+  options.headers = {
+    ...options.headers,
+    'Content-Type': 'application/x-www-form-urlencoded',
+  }
+  const body = new URLSearchParams({
+    name: name,
+    status: status,
+  }).toString()
+  
+  options.body = body
+    
   const response = await makeRequest<void>(
     `https://petstore.swagger.io/v2/pet/${petId}`,
     options
@@ -132,6 +143,17 @@ export async function uploadFile(petId: number, additionalMetadata?: string, fil
     headers: {},
   }
   
+  options.headers = {
+    ...options.headers,
+    'Content-Type': 'application/x-www-form-urlencoded',
+  }
+  const body = new URLSearchParams({
+    additionalMetadata: additionalMetadata,
+    file: file,
+  }).toString()
+  
+  options.body = body
+    
   const response = await makeRequest<ApiResponseType>(
     `https://petstore.swagger.io/v2/pet/${petId}/uploadImage`,
     options
