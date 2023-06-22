@@ -116,6 +116,9 @@ importers:
 
   apps/vitejs:
     dependencies:
+      '@acme/gen-swag':
+        specifier: ^0.1.0
+        version: link:../../packages/gen-swag
       react:
         specifier: ^18.2.0
         version: 18.2.0

@@ -1,10 +1,28 @@
-import { Link, Outlet } from "react-router-dom";
+import {
+  Link,
+  Outlet,
+  useLoaderData,
+  type LoaderFunction,
+} from "react-router-dom";
+
+import { findPetsByStatus } from "@acme/gen-swag";
+
+export async function loader() {
+  const response = await findPetsByStatus(["available"]);
+
+  if (!response.data) {
+    throw new Error("Failed to load contacts");
+  }
+  return { pets: response.data };
+}
 
 export default function Root() {
+  const { pets } = useDataFromLoader<typeof loader>();
+
   return (
     <>
       <div id="sidebar">
-        <h1>React Router Contacts</h1>
+        <h1>React Router Pets</h1>
         <div>
           <form id="search-form" role="search">
             <input
@@ -22,14 +40,22 @@ export default function Root() {
           </form>
         </div>
         <nav>
-          <ul>
-            <li>
-              <Link to={`/contacts/1`}>Your Name</Link>
-            </li>
-            <li>
-              <Link to={`/contacts/2`}>Your Friend</Link>
-            </li>
-          </ul>
+          {pets.length ? (
+            <ul>
+              {pets.map((pet) => (
+                <li key={pet.id}>
+                  <Link to={`pets/${pet.id}`}>
+                    {pet.name ? <>{pet.name}</> : <i>No Name</i>}{" "}
+                    {pet.status && <span> - {pet.status}</span>}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>
+              <i>No pets</i>
+            </p>
+          )}
         </nav>
       </div>
       <div id="detail">
@@ -37,4 +63,8 @@ export default function Root() {
       </div>
     </>
   );
+}
+
+export function useDataFromLoader<TLoader extends LoaderFunction>() {
+  return useLoaderData() as Awaited<ReturnType<TLoader>>;
 }

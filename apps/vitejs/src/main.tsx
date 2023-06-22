@@ -4,18 +4,19 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import "./index.css";
 import ErrorPage from "./error-page.tsx";
-import Contact from "./routes/contact.tsx";
-import Root from "./routes/root.tsx";
+import Pet from "./routes/pet.tsx";
+import Root, { loader as rootLoader } from "./routes/root.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
     errorElement: <ErrorPage />,
+    loader: rootLoader,
     children: [
       {
-        path: "contacts/:contactId",
-        element: <Contact />,
+        path: "pets/:petId",
+        element: <Pet />,
       },
     ],
   },
