@@ -56,6 +56,11 @@ button:active {
   transform: translateY(1px);
 }
 
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 #contact h1 {
   display: flex;
   align-items: flex-start;

@@ -2,6 +2,7 @@ import React from "react";
 import {
   flexRender,
   getCoreRowModel,
+  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { Link, useLoaderData } from "react-router-dom";
@@ -14,6 +15,7 @@ const PetTable: React.FC = () => {
   const table = useReactTable({
     data: pets,
     getCoreRowModel: getCoreRowModel<PetType>(),
+    getPaginationRowModel: getPaginationRowModel(),
     columns: [
       {
         header: "ID",
@@ -72,6 +74,32 @@ const PetTable: React.FC = () => {
           ))}
         </tbody>
       </table>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "1rem",
+          marginTop: "1rem",
+        }}
+      >
+        <button
+          disabled={!table.getCanPreviousPage()}
+          onClick={() => table.previousPage()}
+        >
+          prev
+        </button>
+        <p>
+          Page {table.getState().pagination.pageIndex + 1} of{" "}
+          {table.getPageCount()}
+        </p>
+        <button
+          disabled={!table.getCanNextPage()}
+          onClick={() => table.nextPage()}
+        >
+          next
+        </button>
+      </div>
     </div>
   );
 };
