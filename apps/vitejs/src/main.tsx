@@ -6,6 +6,7 @@ import "./index.css";
 import ErrorPage from "./error-page.tsx";
 import { action as destroyAction } from "./routes/destroy.tsx";
 import EditPet, { action as editAction } from "./routes/edit.tsx";
+import Index from "./routes/index.tsx";
 import Pet, { loader as petLoader } from "./routes/pet.tsx";
 import Root, { loader as rootLoader } from "./routes/root.tsx";
 
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     loader: rootLoader,
     children: [
+      { index: true, element: <Index />, errorElement: <ErrorPage /> },
       {
         path: "pets/:petId",
         element: <Pet />,
