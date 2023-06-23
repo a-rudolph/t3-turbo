@@ -10,6 +10,14 @@ import type {
   SwaggerConfig,
 } from "./types";
 
+// function to generate a function name when operationId is not present
+function getFunctionNameFromPath(path: string, method: string) {
+  const parts = path.split("/").filter((part) => part !== "");
+  const lastPart = parts.pop()!;
+  const secondLastPart = parts.pop()!;
+  return `${method}${secondLastPart}${lastPart}`;
+}
+
 function createApiClient(config: SwaggerConfig) {
   const baseUrl = `${config.host}${config.basePath}`;
 
@@ -20,7 +28,8 @@ function createApiClient(config: SwaggerConfig) {
     const methods = endpoints[path];
     for (const method in methods) {
       const endpoint = methods[method]!;
-      const functionName = endpoint.operationId;
+      const functionName =
+        endpoint.operationId || getFunctionNameFromPath(path, method);
       const url = `https://${baseUrl}${path}`;
 
       const searchParams = getSearchParams(endpoint.parameters);
@@ -56,14 +65,13 @@ export async function ${functionName}(${getFunctionParameters(
   return apiClient;
 }
 
-function replaceUrlParams(url: string, parameters: Parameter[]) {
+function replaceUrlParams(url: string, parameters: Parameter[] = []) {
   return url.replace(/{(.*?)}/g, (_, paramName) => {
-    const param = parameters.find((param) => param.name === paramName)!;
-    return `\${${param.name}}`;
+    const param = parameters.find((param) => param.name === paramName);
+    return `\${${param?.name}}`;
   });
 }
-
-function getSearchParams(parameters: Parameter[]) {
+function getSearchParams(parameters: Parameter[] | undefined = []) {
   const searchParams = parameters.filter((param) => param.in === "query");
   if (!searchParams.length) {
     return "";
@@ -98,7 +106,7 @@ function getSearchParams(parameters: Parameter[]) {
   `;
 }
 
-function getFunctionParameters(parameters: Parameter[]) {
+function getFunctionParameters(parameters: Parameter[] = []) {
   const requiredParams = parameters.filter((param) => param.required);
   const optionalParams = parameters.filter((param) => !param.required);
 
@@ -142,7 +150,7 @@ function getType(param: Parameter | Property | DefinitionRef): string {
   return param.type!;
 }
 
-function getRequestBody(parameters: Parameter[]) {
+function getRequestBody(parameters: Parameter[] = []) {
   const formData = parameters.filter((param) => param.in === "formData");
 
   if (formData.length) {
@@ -186,7 +194,7 @@ function getResponseType(endpoint: Endpoint) {
   if (response.schema) {
     return getType(response.schema);
   }
-  return "void";
+  return "any";
 }
 
 // @ts-ignore
