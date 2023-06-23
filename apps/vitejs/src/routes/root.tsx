@@ -1,4 +1,4 @@
-import { Link, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigation } from "react-router-dom";
 
 import { findPetsByStatus } from "@acme/gen-swag";
 
@@ -32,6 +32,8 @@ export async function loader() {
 export default function Root() {
   const { pets } = useTypedLoader<typeof loader>();
 
+  const navigation = useNavigation();
+
   return (
     <>
       <div id="sidebar">
@@ -57,10 +59,15 @@ export default function Root() {
             <ul>
               {pets.map((pet) => (
                 <li key={pet.id}>
-                  <Link to={`pets/${pet.id}`}>
+                  <NavLink
+                    to={`pets/${pet.id}`}
+                    className={({ isActive, isPending }) =>
+                      isActive ? "active" : isPending ? "pending" : ""
+                    }
+                  >
                     {pet.name ? <>{pet.name}</> : <i>No Name</i>}{" "}
                     {pet.status && <span> - {pet.status}</span>}
-                  </Link>
+                  </NavLink>
                 </li>
               ))}
             </ul>
@@ -71,7 +78,10 @@ export default function Root() {
           )}
         </nav>
       </div>
-      <div id="detail">
+      <div
+        className={navigation.state === "loading" ? "loading" : ""}
+        id="detail"
+      >
         <Outlet />
       </div>
     </>
