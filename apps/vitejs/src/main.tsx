@@ -17,7 +17,16 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     loader: rootLoader,
     children: [
-      { index: true, element: <Index />, errorElement: <ErrorPage /> },
+      {
+        index: true,
+        element: <Index />,
+        errorElement: <ErrorPage />,
+      },
+      {
+        path: "pets",
+        element: <Index />,
+        errorElement: <ErrorPage />,
+      },
       {
         path: "pets/:petId",
         element: <Pet />,
