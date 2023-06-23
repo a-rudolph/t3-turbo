@@ -2,6 +2,7 @@ import {
   Form,
   redirect,
   useLoaderData,
+  useNavigate,
   type ActionFunctionArgs,
 } from "react-router-dom";
 
@@ -18,6 +19,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
 export default function EditPet() {
   const { pet } = useLoaderData() as { pet: PetType };
+  const navigate = useNavigate();
 
   return (
     <Form method="post" id="pet-form">
@@ -48,7 +50,14 @@ export default function EditPet() {
       <p>
         <div className="row">
           <button type="submit">Save</button>
-          <button type="button">Cancel</button>
+          <button
+            onClick={() => {
+              navigate(-1);
+            }}
+            type="button"
+          >
+            Cancel
+          </button>
         </div>
       </p>
     </Form>
