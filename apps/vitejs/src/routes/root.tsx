@@ -4,7 +4,7 @@ import { findPetsByStatus } from "@acme/gen-swag";
 
 import { useTypedLoader } from "../lib/useTypedLoader";
 
-export async function loader() {
+export async function listLoader() {
   const response = await findPetsByStatus(["available"]);
 
   if (!response.data) {
@@ -30,7 +30,7 @@ export async function loader() {
 }
 
 export default function Root() {
-  const { pets } = useTypedLoader<typeof loader>();
+  const { pets } = useTypedLoader<typeof listLoader>();
 
   const navigation = useNavigation();
 
@@ -38,7 +38,12 @@ export default function Root() {
     <>
       <div id="sidebar">
         <h1>React Router Pets</h1>
-        <div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
           <form id="search-form" role="search">
             <input
               id="q"
@@ -50,6 +55,7 @@ export default function Root() {
             <div id="search-spinner" aria-hidden hidden={true} />
             <div className="sr-only" aria-live="polite"></div>
           </form>
+          <NavLink to="pets">Table</NavLink>
         </div>
         <nav>
           {pets.length ? (

@@ -8,22 +8,18 @@ import { action as destroyAction } from "./routes/destroy.tsx";
 import EditPet, { action as editAction } from "./routes/edit.tsx";
 import Index from "./routes/index.tsx";
 import Pet, { loader as petLoader } from "./routes/pet.tsx";
-import Root, { loader as rootLoader } from "./routes/root.tsx";
+import Root, { listLoader } from "./routes/root.tsx";
+import PetTable from "./routes/table.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
     errorElement: <ErrorPage />,
-    loader: rootLoader,
+    loader: listLoader,
     children: [
       {
         index: true,
-        element: <Index />,
-        errorElement: <ErrorPage />,
-      },
-      {
-        path: "pets",
         element: <Index />,
         errorElement: <ErrorPage />,
       },
@@ -45,6 +41,12 @@ const router = createBrowserRouter([
         action: destroyAction,
       },
     ],
+  },
+  {
+    path: "/pets",
+    element: <PetTable />,
+    errorElement: <ErrorPage />,
+    loader: listLoader,
   },
 ]);
 
