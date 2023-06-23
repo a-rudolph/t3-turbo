@@ -55,7 +55,7 @@ export default function Pet() {
 
 function Favorite({ contact }: { contact: { favorite: boolean } }) {
   // yes, this is a `let` for later
-  let favorite = contact.favorite;
+  const favorite = contact.favorite;
   return (
     <Form method="post">
       <button

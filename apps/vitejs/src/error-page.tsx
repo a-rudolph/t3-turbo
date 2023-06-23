@@ -1,6 +1,6 @@
 import { useRouteError } from "react-router-dom";
 
-import { ApiError } from "@acme/gen-swag";
+import { type ApiError } from "@acme/gen-swag/lib/types";
 
 export default function ErrorPage() {
   const error = useRouteError();
@@ -26,6 +26,7 @@ export default function ErrorPage() {
   }
 }
 
-function isApiError(error: any): error is ApiError {
-  return error && error.code && error.data && error.data.message;
+function isApiError(_error: any): _error is ApiError {
+  const error = _error as ApiError;
+  return Boolean(error && error?.code && error?.data && error?.data?.message);
 }

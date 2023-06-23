@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, redirect } from "react-router-dom";
+import { redirect, type ActionFunctionArgs } from "react-router-dom";
 
 import { deletePet } from "@acme/gen-swag";
 
