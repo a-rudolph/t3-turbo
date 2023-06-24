@@ -19,26 +19,28 @@ const router = createBrowserRouter([
     loader: listLoader,
     children: [
       {
-        index: true,
-        element: <Index />,
         errorElement: <ErrorPage />,
-      },
-      {
-        path: "pets/:petId",
-        element: <Pet />,
-        errorElement: <ErrorPage />,
-        loader: petLoader,
-      },
-      {
-        path: "pets/:petId/edit",
-        element: <EditPet />,
-        errorElement: <ErrorPage />,
-        loader: petLoader,
-        action: editAction,
-      },
-      {
-        path: "pets/:petId/destroy",
-        action: destroyAction,
+        children: [
+          {
+            index: true,
+            element: <Index />,
+          },
+          {
+            path: "pets/:petId",
+            element: <Pet />,
+            loader: petLoader,
+          },
+          {
+            path: "pets/:petId/edit",
+            element: <EditPet />,
+            loader: petLoader,
+            action: editAction,
+          },
+          {
+            path: "pets/:petId/destroy",
+            action: destroyAction,
+          },
+        ],
       },
     ],
   },
