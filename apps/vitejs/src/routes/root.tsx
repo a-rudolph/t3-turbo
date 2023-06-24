@@ -83,8 +83,6 @@ export default function Root() {
     navigation.location &&
     new URLSearchParams(navigation.location.search).has("q");
 
-  console.log(navigation.location?.search);
-
   useEffect(() => {
     const element = document.getElementById("q") as HTMLInputElement | null;
 
