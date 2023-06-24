@@ -4,14 +4,39 @@ import {
   NavLink,
   Outlet,
   useNavigation,
+  useSubmit,
   type LoaderFunctionArgs,
+  type SubmitOptions,
 } from "react-router-dom";
 
 import { findPetsByStatus } from "@acme/gen-swag";
 
 import { useTypedLoader } from "../lib/useTypedLoader";
 
+type ArgsType<T> = T extends (..._args: infer U) => any ? U : never;
+type CustomReturnType<T> = T extends (..._args: any[]) => infer U ? U : never;
+
+export function debounce<TFn extends Function>(fn: TFn, delay: number) {
+  let timeoutId: number | null = null;
+
+  return (...args: ArgsType<TFn>) => {
+    if (timeoutId) {
+      window.clearTimeout(timeoutId);
+    }
+
+    return new Promise((resolve) => {
+      timeoutId = window.setTimeout(() => {
+        const result = fn(...args) as CustomReturnType<TFn>;
+        resolve(result);
+      }, delay);
+    });
+  };
+}
+
 export async function listLoader({ request }: LoaderFunctionArgs) {
+  // sleep 3 seconds to simulate a slow network
+  // await new Promise((resolve) => setTimeout(resolve, 3000));
+
   const response = await findPetsByStatus(["available"]);
 
   const url = new URL(request.url);
@@ -52,6 +77,14 @@ export default function Root() {
 
   const navigation = useNavigation();
 
+  const submit = useSubmit();
+
+  const searching =
+    navigation.location &&
+    new URLSearchParams(navigation.location.search).has("q");
+
+  console.log(navigation.location?.search);
+
   useEffect(() => {
     const element = document.getElementById("q") as HTMLInputElement | null;
 
@@ -59,6 +92,13 @@ export default function Root() {
 
     element.value = query;
   }, [query]);
+
+  const debouncedSubmit = debounce(
+    (form: HTMLFormElement | null, options: SubmitOptions) => {
+      submit(form, options);
+    },
+    500,
+  );
 
   return (
     <>
@@ -76,10 +116,17 @@ export default function Root() {
               aria-label="Search contacts"
               placeholder="Search"
               type="search"
+              className={searching ? "loading" : ""}
               name="q"
               defaultValue={query || undefined}
+              onChange={(event) => {
+                const isFirstSearch = query == null;
+                void debouncedSubmit(event.currentTarget.form, {
+                  replace: !isFirstSearch,
+                });
+              }}
             />
-            <div id="search-spinner" aria-hidden hidden={true} />
+            <div id="search-spinner" aria-hidden hidden={!searching} />
             <div className="sr-only" aria-live="polite"></div>
           </Form>
           <NavLink to="pets">Table</NavLink>
