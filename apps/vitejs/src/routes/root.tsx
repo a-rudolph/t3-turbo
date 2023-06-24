@@ -13,8 +13,8 @@ import { findPetsByStatus } from "@acme/gen-swag";
 
 import { useTypedLoader } from "../lib/useTypedLoader";
 
-type ArgsType<T> = T extends (..._args: infer U) => any ? U : never;
-type CustomReturnType<T> = T extends (..._args: any[]) => infer U ? U : never;
+type ArgsType<T> = T extends (...args: infer U) => any ? U : never;
+type CustomReturnType<T> = T extends (...args: any[]) => infer U ? U : never;
 
 export function debounce<TFn extends Function>(fn: TFn, delay: number) {
   let timeoutId: number | null = null;

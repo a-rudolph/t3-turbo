@@ -8,6 +8,7 @@ const config = {
   ],
   rules: {
     "@typescript-eslint/restrict-template-expressions": "off",
+    "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [
       "error",
       {
@@ -20,6 +21,7 @@ const config = {
       "error",
       { prefer: "type-imports", fixStyle: "inline-type-imports" },
     ],
+    "@typescript-eslint/ban-types": "warn",
   },
   ignorePatterns: ["**/*.config.js", "**/*.config.cjs", "packages/config/**"],
   reportUnusedDisableDirectives: true,
