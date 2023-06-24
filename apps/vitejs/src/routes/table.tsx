@@ -5,12 +5,14 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Link, useLoaderData } from "react-router-dom";
+import { Link, useLoaderData, useNavigate } from "react-router-dom";
 
 import { type PetType } from "@acme/gen-swag";
 
 const PetTable: React.FC = () => {
   const { pets } = useLoaderData() as { pets: PetType[] };
+
+  const navigate = useNavigate();
 
   const table = useReactTable({
     data: pets,
@@ -42,6 +44,7 @@ const PetTable: React.FC = () => {
 
   return (
     <div id="detail">
+      <button onClick={() => navigate(-1)}>{"< Back"}</button>
       <h1>Pet Table</h1>
       <table>
         <thead>
