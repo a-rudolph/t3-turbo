@@ -1,11 +1,21 @@
-import { NavLink, Outlet, useNavigation } from "react-router-dom";
+import { useEffect } from "react";
+import {
+  Form,
+  NavLink,
+  Outlet,
+  useNavigation,
+  type LoaderFunctionArgs,
+} from "react-router-dom";
 
 import { findPetsByStatus } from "@acme/gen-swag";
 
 import { useTypedLoader } from "../lib/useTypedLoader";
 
-export async function listLoader() {
+export async function listLoader({ request }: LoaderFunctionArgs) {
   const response = await findPetsByStatus(["available"]);
+
+  const url = new URL(request.url);
+  const query = url.searchParams.get("q");
 
   if (!response.data) {
     throw new Error("Failed to load contacts");
@@ -16,6 +26,14 @@ export async function listLoader() {
   const uniquePetIds = new Set<number>();
 
   const uniquePets = pets.filter((pet) => {
+    if (
+      query &&
+      pet.name &&
+      !pet.name.toLowerCase().includes(query.toLowerCase())
+    ) {
+      return false;
+    }
+
     if (!pet.id) return false;
 
     if (uniquePetIds.has(pet.id)) {
@@ -26,13 +44,21 @@ export async function listLoader() {
     }
   });
 
-  return { pets: uniquePets };
+  return { pets: uniquePets, query };
 }
 
 export default function Root() {
-  const { pets } = useTypedLoader<typeof listLoader>();
+  const { pets, query } = useTypedLoader<typeof listLoader>();
 
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const element = document.getElementById("q") as HTMLInputElement | null;
+
+    if (!element || !query) return;
+
+    element.value = query;
+  }, [query]);
 
   return (
     <>
@@ -44,17 +70,18 @@ export default function Root() {
             justifyContent: "space-between",
           }}
         >
-          <form id="search-form" role="search">
+          <Form id="search-form" role="search">
             <input
               id="q"
               aria-label="Search contacts"
               placeholder="Search"
               type="search"
               name="q"
+              defaultValue={query || undefined}
             />
             <div id="search-spinner" aria-hidden hidden={true} />
             <div className="sr-only" aria-live="polite"></div>
-          </form>
+          </Form>
           <NavLink to="pets">Table</NavLink>
         </div>
         <nav>
