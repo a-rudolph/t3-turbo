@@ -13,8 +13,6 @@ import { type PetType } from "@acme/gen-swag";
 const PetTable: React.FC = () => {
   const { pets } = useLoaderData() as { pets: PetType[] };
 
-  const navigate = useNavigate();
-
   const table = useReactTable({
     data: pets,
     getCoreRowModel: getCoreRowModel<PetType>(),
@@ -45,7 +43,7 @@ const PetTable: React.FC = () => {
 
   return (
     <div id="detail">
-      <button onClick={() => navigate(-1)}>{"< Back"}</button>
+      <BackButton />
       <h1>Pet Table</h1>
       <table>
         <thead>
@@ -143,4 +141,9 @@ export const Pagination = ({ table }: { table: Table<PetType> }) => {
       </button>
     </div>
   );
+};
+
+const BackButton = () => {
+  const navigate = useNavigate();
+  return <button onClick={() => navigate(-1)}>back</button>;
 };
