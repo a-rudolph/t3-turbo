@@ -280,16 +280,6 @@ i {
   color: hsl(224, 98%, 58%);
 }
 
-#contact a[href*="twitter"] {
-  display: flex;
-  font-size: 1.5rem;
-  color: #3992ff;
-  text-decoration: none;
-}
-#contact a[href*="twitter"]:hover {
-  text-decoration: underline;
-}
-
 #contact img {
   width: 12rem;
   height: 12rem;
