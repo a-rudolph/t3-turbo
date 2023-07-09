@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node ./watch.js",
     "build": "tsc && node ./dist/src/generate.js",
-    "postinstall": "pnpm run build",
+    "post-install": "pnpm run build",
     "clean": "rm -rf ./dist"
   },
   "keywords": [],

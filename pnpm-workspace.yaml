@@ -1,6 +1,7 @@
 packages:
   - apps/nextjs
   - apps/vitejs
+  - apps/remix
   - packages/api
   - packages/auth
   - packages/db
