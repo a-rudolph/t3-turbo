@@ -145,13 +145,13 @@ importers:
         specifier: ^1.18.1
         version: 1.18.1(eslint@8.40.0)(react@18.2.0)(typescript@5.0.4)
       '@types/react':
-        specifier: ^18.0.35
+        specifier: ^18.2.6
         version: 18.2.6
       '@types/react-dom':
-        specifier: ^18.0.11
+        specifier: ^18.2.4
         version: 18.2.4
       eslint:
-        specifier: ^8.38.0
+        specifier: ^8.40.0
         version: 8.40.0
       typescript:
         specifier: ^5.0.4
