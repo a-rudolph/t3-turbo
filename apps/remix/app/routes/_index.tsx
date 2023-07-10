@@ -14,6 +14,14 @@ export default function Index() {
       <h1>Welcome to Remix</h1>
       <ul>
         <li>
+          <Link to="/about">About Page</Link>
+        </li>
+        <li>
+          <Link to="/contact">Contact Page</Link>
+        </li>
+        {/* divider */}
+        <hr />
+        <li>
           <a
             target="_blank"
             href="https://remix.run/tutorials/blog"
@@ -35,9 +43,6 @@ export default function Index() {
           <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
             Remix Docs
           </a>
-        </li>
-        <li>
-          <Link to="/about">About Page</Link>
         </li>
       </ul>
     </div>
