@@ -6,7 +6,7 @@
     "build": "remix build",
     "dev": "remix dev",
     "start": "remix-serve build",
-    "typecheck": "tsc"
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@remix-run/css-bundle": "^1.18.1",
