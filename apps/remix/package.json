@@ -1,4 +1,5 @@
 {
+  "name": "@acme/remix",
   "private": true,
   "sideEffects": false,
   "scripts": {
