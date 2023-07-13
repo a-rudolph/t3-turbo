@@ -6,7 +6,7 @@ import type {
   NextPage,
 } from "next/types";
 
-import { findPetsByStatus, getPetById } from "@acme/gen-swag";
+import { getPetById } from "@acme/gen-swag";
 
 export const getServerSideProps = async (
   ctx: GetServerSidePropsContext<{ petId: string }>,
@@ -54,17 +54,6 @@ const PetsPage: NextPage<
     }
   }, [pets?.data.name]);
 
-  const test = async () => {
-    const response = await findPetsByStatus(["pending", "available"]);
-    console.log(response);
-  };
-
-  const onClick = () => {
-    test().catch((error) => {
-      console.error(error);
-    });
-  };
-
   if (!pets && typeof error === "object" && error !== null) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -74,13 +63,6 @@ const PetsPage: NextPage<
             {key}: {String(value)}
           </p>
         ))}
-
-        <button
-          className="mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
-          onClick={onClick}
-        >
-          test
-        </button>
       </div>
     );
   }
@@ -89,12 +71,6 @@ const PetsPage: NextPage<
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-lg">Pets</h1>
       <p>{pets?.data?.name}</p>
-      <button
-        className="mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
-        onClick={onClick}
-      >
-        test
-      </button>
     </div>
   );
 };

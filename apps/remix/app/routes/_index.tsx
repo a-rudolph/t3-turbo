@@ -14,13 +14,17 @@ export default function Index() {
       <h1>Welcome to Remix</h1>
       <ul>
         <li>
-          <Link to="/about">About Page</Link>
+          <Link to="/pets">Pets Page</Link>
         </li>
         <li>
-          <Link to="/contact">Contact Page</Link>
+          <Link to="/about">About Page</Link>
         </li>
-        {/* divider */}
         <hr />
+        <li>
+          <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
+            Remix Docs
+          </a>
+        </li>
         <li>
           <a
             target="_blank"
@@ -37,11 +41,6 @@ export default function Index() {
             rel="noreferrer"
           >
             Deep Dive Jokes App Tutorial
-          </a>
-        </li>
-        <li>
-          <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
-            Remix Docs
           </a>
         </li>
       </ul>
