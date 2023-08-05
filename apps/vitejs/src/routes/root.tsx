@@ -112,7 +112,7 @@ export default function Root() {
             <input
               id="q"
               aria-label="Search pets"
-              placeholder="Search pets"
+              placeholder="Search"
               type="search"
               className={searching ? "loading" : ""}
               name="q"
