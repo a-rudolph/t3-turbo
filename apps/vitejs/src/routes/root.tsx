@@ -111,7 +111,7 @@ export default function Root() {
           <Form id="search-form" role="search">
             <input
               id="q"
-              aria-label="Search contacts"
+              aria-label="Search pets"
               placeholder="Search"
               type="search"
               className={searching ? "loading" : ""}
