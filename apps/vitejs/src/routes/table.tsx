@@ -6,12 +6,14 @@ import {
   useReactTable,
   type Table,
 } from "@tanstack/react-table";
-import { Link, useLoaderData, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { type PetType } from "@acme/gen-swag";
 
+import { useAppSelector } from "../store/hooks";
+
 const PetTable: React.FC = () => {
-  const { pets } = useLoaderData() as { pets: PetType[] };
+  const { pets } = useAppSelector((state) => state.pets);
 
   const table = useReactTable({
     data: pets,

@@ -5,6 +5,8 @@ import { getPetById } from "@acme/gen-swag";
 import { useTypedLoader } from "../lib/useTypedLoader";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
+  await new Promise((resolve) => setTimeout(resolve, 3000));
+
   const response = await getPetById(Number(params.petId));
 
   if (!response.data) {

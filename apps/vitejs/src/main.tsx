@@ -3,6 +3,8 @@ import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import "./index.css";
+import { Provider } from "react-redux";
+
 import ErrorPage from "./error-page.tsx";
 import { action as destroyAction } from "./routes/destroy.tsx";
 import EditPet, { action as editAction } from "./routes/edit.tsx";
@@ -10,6 +12,7 @@ import Index from "./routes/index.tsx";
 import Pet, { loader as petLoader } from "./routes/pet.tsx";
 import Root, { listLoader } from "./routes/root.tsx";
 import PetTable from "./routes/table.tsx";
+import { store } from "./store/index.ts";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +57,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>,
 );
