@@ -41,7 +41,7 @@ importers:
         specifier: ^0.1.0
         version: link:../../packages/db
       '@acme/gen-swag':
-        specifier: workspace:*
+        specifier: ^0.1.0
         version: link:../../packages/gen-swag
       '@acme/tailwind-config':
         specifier: ^0.1.0
@@ -160,7 +160,7 @@ importers:
   apps/vitejs:
     dependencies:
       '@acme/gen-swag':
-        specifier: workspace:*
+        specifier: ^0.1.0
         version: link:../../packages/gen-swag
       '@reduxjs/toolkit':
         specifier: ^1.9.5
