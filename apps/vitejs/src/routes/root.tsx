@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { type Dispatch } from "@reduxjs/toolkit";
 import {
   Form,
   NavLink,
@@ -16,14 +17,11 @@ import { dispatch } from "../store";
 import { useAppSelector } from "../store/hooks";
 import { setPets } from "../store/pets.slice";
 
-export async function listLoader({ request }: LoaderFunctionArgs) {
+export async function getPets({ query }: { query?: string | null }) {
   const response = await findPetsByStatus(["available"]);
 
-  const url = new URL(request.url);
-  const query = url.searchParams.get("q");
-
   if (!response.data) {
-    throw new Error("Failed to load contacts");
+    throw new Error("Failed to load pets");
   }
 
   const pets = response.data;
@@ -49,7 +47,20 @@ export async function listLoader({ request }: LoaderFunctionArgs) {
     }
   });
 
-  dispatch(setPets(uniquePets));
+  return { pets: uniquePets };
+}
+
+const getPetsThunk = (query: string | null) => async (dispatch: Dispatch) => {
+  const { pets } = await getPets({ query });
+
+  dispatch(setPets(pets));
+};
+
+export async function listLoader({ request }: LoaderFunctionArgs) {
+  const url = new URL(request.url);
+  const query = url.searchParams.get("q");
+
+  dispatch(getPetsThunk(query));
 
   return { query };
 }

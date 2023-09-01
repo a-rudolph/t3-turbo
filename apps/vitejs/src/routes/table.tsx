@@ -83,6 +83,8 @@ const PetTable: React.FC = () => {
   );
 };
 
+export const Component = PetTable;
+
 export default PetTable;
 
 export const Pagination = ({ table }: { table: Table<PetType> }) => {

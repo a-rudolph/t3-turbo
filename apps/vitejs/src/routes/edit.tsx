@@ -1,29 +1,14 @@
-import {
-  Form,
-  redirect,
-  useLoaderData,
-  useNavigate,
-  type ActionFunctionArgs,
-} from "react-router-dom";
+import { Form, useNavigate } from "react-router-dom";
 
-import { updatePetWithForm, type PetType } from "@acme/gen-swag";
-
-export async function action({ request, params }: ActionFunctionArgs) {
-  const formData = await request.formData();
-  const updates = Object.fromEntries(formData) as Partial<PetType>;
-
-  await updatePetWithForm(Number(params.petId), updates.name, updates.status);
-
-  return redirect(`/pets/${params.petId}`);
-}
+import { usePetLoader } from "./pet.route";
 
 export default function EditPet() {
-  const { pet } = useLoaderData() as { pet: PetType };
+  const { pet } = usePetLoader();
   const navigate = useNavigate();
 
   return (
     <Form method="post" id="pet-form">
-      <p>
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         <div className="row">
           <span>Name</span>
           <input
@@ -34,8 +19,6 @@ export default function EditPet() {
             defaultValue={pet.name}
           />
         </div>
-      </p>
-      <p>
         <div className="row">
           <span>status</span>
           <input
@@ -46,8 +29,6 @@ export default function EditPet() {
             defaultValue={pet.status}
           />
         </div>
-      </p>
-      <p>
         <div className="row">
           <button type="submit">Save</button>
           <button
@@ -59,7 +40,7 @@ export default function EditPet() {
             Cancel
           </button>
         </div>
-      </p>
+      </div>
     </Form>
   );
 }
