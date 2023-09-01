@@ -41,7 +41,7 @@ importers:
         specifier: ^0.1.0
         version: link:../../packages/db
       '@acme/gen-swag':
-        specifier: ^0.1.0
+        specifier: workspace:*
         version: link:../../packages/gen-swag
       '@acme/tailwind-config':
         specifier: ^0.1.0
