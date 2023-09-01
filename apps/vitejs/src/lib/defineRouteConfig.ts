@@ -5,7 +5,7 @@ import {
 } from "react-router-dom";
 
 type BreadcrumbItemType = {
-  foo: "bar";
+  label: string;
 };
 
 type LoaderReturnType<TLoader extends LoaderFunction | undefined> =
@@ -37,13 +37,6 @@ export function defineRouteConfig<TLoaderFn extends LoaderFunction | undefined>(
 
 const test1 = defineRouteConfig({
   id: "test",
-  handle: {
-    crumb: () => [],
-  },
-});
-
-const test2 = defineRouteConfig({
-  id: "test",
   // loader: async () => 'test',
   handle: {
     // @ts-expect-error because _data is not passed to crumb without a loader
@@ -51,9 +44,9 @@ const test2 = defineRouteConfig({
   },
 });
 
-const test3 = defineRouteConfig({
+const test2 = defineRouteConfig({
   id: "test",
-  loader: async () => ({ foo: "bar" }),
+  loader: () => ({ foo: "bar" }),
   handle: {
     crumb: (data) => {
       data.foo;
@@ -62,10 +55,10 @@ const test3 = defineRouteConfig({
   },
 });
 
-const loader: LoaderFunction = test3.loader;
-
 // @ts-expect-error because loader was not passed to defineRouteConfig
-const loader2: LoaderFunction = test2.loader;
+test1.loader satisfies LoaderFunction;
+
+test2.loader satisfies LoaderFunction;
 
 export const createHooks = <TLoader extends LoaderFunction>(
   config: OurRouteObject<TLoader>,
@@ -77,4 +70,4 @@ export const createHooks = <TLoader extends LoaderFunction>(
   };
 };
 
-export const { useLoader: useTestLoaderData } = createHooks(test3);
+export const { useLoader: useTestLoaderData } = createHooks(test2);

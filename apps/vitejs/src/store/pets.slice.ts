@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-import { PetType } from "@acme/gen-swag";
+import { type PetType } from "@acme/gen-swag";
 
 const petsSlice = createSlice({
   name: "pets",

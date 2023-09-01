@@ -56,11 +56,11 @@ const getPetsThunk = (query: string | null) => async (dispatch: Dispatch) => {
   dispatch(setPets(pets));
 };
 
-export async function listLoader({ request }: LoaderFunctionArgs) {
+export function listLoader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const query = url.searchParams.get("q");
 
-  dispatch(getPetsThunk(query));
+  void dispatch(getPetsThunk(query));
 
   return { query };
 }

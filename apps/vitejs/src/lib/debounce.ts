@@ -1,6 +1,9 @@
-type ArgsType<T> = T extends (...args: infer U) => any ? U : never;
-type CustomReturnType<T> = T extends (...args: any[]) => infer U ? U : never;
+type ArgsType<T> = T extends (...args: infer U) => unknown ? U : never;
+type CustomReturnType<T> = T extends (...args: unknown[]) => infer U
+  ? U
+  : never;
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function debounce<TFn extends Function>(fn: TFn, delay: number) {
   let timeoutId: number | null = null;
 
