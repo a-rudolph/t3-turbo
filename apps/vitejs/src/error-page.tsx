@@ -26,7 +26,7 @@ export default function ErrorPage() {
   }
 }
 
-function isApiError(_error: any): _error is ApiError {
+function isApiError(_error: unknown): _error is ApiError {
   const error = _error as ApiError;
   return Boolean(error && error?.code && error?.data && error?.data?.message);
 }

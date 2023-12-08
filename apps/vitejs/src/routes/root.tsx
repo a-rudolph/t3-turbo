@@ -6,74 +6,27 @@ import {
   useNavigation,
   useSubmit,
   type LoaderFunctionArgs,
-  type SubmitOptions,
 } from "react-router-dom";
 
-import { findPetsByStatus } from "@acme/gen-swag";
-
+import { debounce } from "../lib/debounce";
 import { useTypedLoader } from "../lib/useTypedLoader";
+import { dispatch } from "../store";
+import { useAppSelector } from "../store/hooks";
+import { fetchPetsThunk } from "../store/pets.slice";
 
-type ArgsType<T> = T extends (...args: infer U) => any ? U : never;
-type CustomReturnType<T> = T extends (...args: any[]) => infer U ? U : never;
-
-export function debounce<TFn extends Function>(fn: TFn, delay: number) {
-  let timeoutId: number | null = null;
-
-  return (...args: ArgsType<TFn>) => {
-    if (timeoutId) {
-      window.clearTimeout(timeoutId);
-    }
-
-    return new Promise((resolve) => {
-      timeoutId = window.setTimeout(() => {
-        const result = fn(...args) as CustomReturnType<TFn>;
-        resolve(result);
-      }, delay);
-    });
-  };
-}
-
-export async function listLoader({ request }: LoaderFunctionArgs) {
-  // sleep 3 seconds to simulate a slow network
-  // await new Promise((resolve) => setTimeout(resolve, 3000));
-
-  const response = await findPetsByStatus(["available"]);
-
+export function listLoader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const query = url.searchParams.get("q");
 
-  if (!response.data) {
-    throw new Error("Failed to load contacts");
-  }
+  void dispatch(fetchPetsThunk(query));
 
-  const pets = response.data;
-
-  const uniquePetIds = new Set<number>();
-
-  const uniquePets = pets.filter((pet) => {
-    if (
-      query &&
-      pet.name &&
-      !pet.name.toLowerCase().includes(query.toLowerCase())
-    ) {
-      return false;
-    }
-
-    if (!pet.id) return false;
-
-    if (uniquePetIds.has(pet.id)) {
-      return false;
-    } else {
-      uniquePetIds.add(pet.id);
-      return true;
-    }
-  });
-
-  return { pets: uniquePets, query };
+  return { query };
 }
 
 export default function Root() {
-  const { pets, query } = useTypedLoader<typeof listLoader>();
+  const { query } = useTypedLoader<typeof listLoader>();
+
+  const { pets } = useAppSelector((state) => state.pets);
 
   const navigation = useNavigation();
 
@@ -91,12 +44,7 @@ export default function Root() {
     element.value = query;
   }, [query]);
 
-  const debouncedSubmit = debounce(
-    (form: HTMLFormElement | null, options: SubmitOptions) => {
-      submit(form, options);
-    },
-    500,
-  );
+  const debouncedSubmit = debounce(submit, 500);
 
   return (
     <>
@@ -118,7 +66,7 @@ export default function Root() {
               name="q"
               defaultValue={query || undefined}
               onChange={(event) => {
-                const isFirstSearch = query == null;
+                const isFirstSearch = query === null;
                 void debouncedSubmit(event.currentTarget.form, {
                   replace: !isFirstSearch,
                 });
