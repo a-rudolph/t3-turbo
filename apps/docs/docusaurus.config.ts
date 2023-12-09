@@ -29,6 +29,8 @@ const config: Config = {
     locales: ["en"],
   },
 
+  plugins: [require.resolve("@cmfcmf/docusaurus-search-local")],
+
   presets: [
     [
       "classic",
@@ -71,6 +73,10 @@ const config: Config = {
           label: "Tutorial",
         },
         { to: "/blog", label: "Blog", position: "left" },
+        {
+          type: "search",
+          position: "right",
+        },
         {
           href: "https://github.com/facebook/docusaurus",
           label: "GitHub",
